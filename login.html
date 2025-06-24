@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Најава</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Најава</h2>
+    <form id="loginForm" class="w-50 mx-auto">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Лозинка</label>
+        <input type="password" name="password" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary">Најави се</button>
+    </form>
+    <div id="message" class="text-center mt-3"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        email: form.email.value,
+        password: form.password.value
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          message.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+          // Пренасочување (пример: admin.html)
+          setTimeout(() => window.location.href = 'admin.html', 1500);
+        } else {
+          message.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+        }
+      } catch (err) {
+        message.innerHTML = `<div class="alert alert-danger">Fetch грешка: ${err.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+

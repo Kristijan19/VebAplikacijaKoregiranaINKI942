@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Наплата - Бутик</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container mt-5 mb-5">
+    <h2 class="mb-4">Кошничка - Наплата</h2>
+
+    <!-- Кошничка производи -->
+    <div id="cartItems" class="mb-4"></div>
+    <h4>Вкупна цена: <span id="totalPrice">0</span> ден</h4>
+
+    <hr class="my-4" />
+
+    <!-- Форма за податоци за испорака -->
+    <h4 class="mb-3">Податоци за испорака</h4>
+    <form id="orderForm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Име и презиме</label>
+        <input type="text" class="form-control" id="name" required />
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Адреса за достава</label>
+        <input type="text" class="form-control" id="address" required />
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Телефон</label>
+        <input type="tel" class="form-control" id="phone" required />
+      </div>
+      <div class="mb-3 text-end">
+        <button type="submit" class="btn btn-success">Заврши нарачка</button>
+        <a href="index.html" class="btn btn-secondary">Врати се назад</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsDiv = document.getElementById('cartItems');
+    const totalPriceSpan = document.getElementById('totalPrice');
+
+    function renderCart() {
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p>Кошничката е празна.</p>';
+        totalPriceSpan.textContent = '0';
+        return;
+      }
+
+      cartItemsDiv.innerHTML = '<ul class="list-group">';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * (item.quantity || 1);
+        total += itemTotal;
+
+        cartItemsDiv.innerHTML += `
+          <li class="list-group-item d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+              <strong>${item.name}</strong><br />
+              Единична цена: ${item.price} ден<br />
+              Количина: 
+              <input type="number" min="1" value="${item.quantity || 1}" 
+                data-index="${index}" class="form-control d-inline-block" style="width:80px" />
+            </div>
+            <div>
+              <button class="btn btn-danger btn-sm" onclick="removeItem(${index})">Избриши</button>
+            </div>
+          </li>
+        `;
+      });
+
+      cartItemsDiv.innerHTML += '</ul>';
+      totalPriceSpan.textContent = total;
+
+      // Додај event слушачи за количини
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('change', e => {
+          const i = e.target.dataset.index;
+          const newQty = parseInt(e.target.value);
+          cart[i].quantity = newQty > 0 ? newQty : 1;
+          localStorage.setItem('cart', JSON.stringify(cart));
+          renderCart();
+        });
+      });
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    // При испраќање нарачка
+    document.getElementById('orderForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (cart.length === 0) {
+        alert('Кошничката е празна!');
+        return;
+      }
+
+      const name = document.getElementById('name').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!name || !address || !phone) {
+        alert('Пополнете ги сите полиња!');
+        return;
+      }
+
+      // Тука можеш да пратиш POST барање до backend
+      alert(`Нарачката е примена, ${name}!`);
+      localStorage.removeItem('cart');
+      window.location.href = 'index.html';
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>
+

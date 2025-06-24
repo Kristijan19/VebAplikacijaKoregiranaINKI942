@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пребарување - Бутик</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Пребарување на производи</h2>
+
+    <!-- Филтри за пребарување -->
+    <form id="searchForm" class="row mb-4">
+      <div class="col-md-4 mb-2">
+        <input type="text" id="nameInput" class="form-control" placeholder="Име на производ">
+      </div>
+      <div class="col-md-4 mb-2">
+        <select id="categoryInput" class="form-select">
+          <option value="">Сите категории</option>
+          <option value="Женска">Женска</option>
+          <option value="Машка">Машка</option>
+          <option value="Детска">Детска</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-2">
+        <input type="number" id="priceInput" class="form-control" placeholder="Максимална цена (ден)">
+      </div>
+      <div class="col-md-12 text-center">
+        <button type="submit" class="btn btn-primary mt-2">Пребарај</button>
+      </div>
+    </form>
+
+    <!-- Резултати од пребарување -->
+    <div class="row" id="productContainer">
+      <!-- Производи се додаваат динамички -->
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      {
+        name: "Фустан Летен",
+        category: "Женска",
+        price: 1500,
+        image: "https://via.placeholder.com/300x200"
+      },
+      {
+        name: "Машка Кошула",
+        category: "Машка",
+        price: 1200,
+        image: "https://via.placeholder.com/300x200"
+      },
+      {
+        name: "Детско Есенско Палто",
+        category: "Детска",
+        price: 1800,
+        image: "https://via.placeholder.com/300x200"
+      }
+    ];
+
+    const productContainer = document.getElementById("productContainer");
+    const form = document.getElementById("searchForm");
+
+    function displayProducts(list) {
+      productContainer.innerHTML = "";
+      if (list.length === 0) {
+        productContainer.innerHTML = "<p class='text-center'>Нема пронајдени производи.</p>";
+        return;
+      }
+
+      list.forEach(product => {
+        const col = document.createElement("div");
+        col.className = "col-md-4 mb-4";
+
+        col.innerHTML = `
+          <div class="card h-100">
+            <img src="${product.image}" class="card-img-top" alt="${product.name}" />
+            <div class="card-body">
+              <h5 class="card-title">${product.name}</h5>
+              <p class="card-text">Категорија: ${product.category}</p>
+              <p class="card-text fw-bold">Цена: ${product.price} ден</p>
+              <a href="product-details.html" class="btn btn-outline-primary w-100">Детали</a>
+            </div>
+          </div>
+        `;
+        productContainer.appendChild(col);
+      });
+    }
+
+    // Прикажи сите на старт
+    displayProducts(products);
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nameFilter = document.getElementById("nameInput").value.toLowerCase();
+      const categoryFilter = document.getElementById("categoryInput").value;
+      const priceFilter = parseInt(document.getElementById("priceInput").value);
+
+      const filtered = products.filter(p => {
+        const matchName = p.name.toLowerCase().includes(nameFilter);
+        const matchCategory = categoryFilter === "" || p.category === categoryFilter;
+        const matchPrice = isNaN(priceFilter) || p.price <= priceFilter;
+
+        return matchName && matchCategory && matchPrice;
+      });
+
+      displayProducts(filtered);
+    });
+  </script>
+</body>
+</html>
+

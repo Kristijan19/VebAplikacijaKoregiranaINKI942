@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <link rel="stylesheet" href="style.css" />
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Уреди производ - Бутик</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Уреди производ</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form>
+          <div class="mb-3">
+            <label for="name" class="form-label">Име на производ</label>
+            <input type="text" class="form-control" id="name" value="Фустан Летен" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="price" class="form-label">Цена (денари)</label>
+            <input type="number" class="form-control" id="price" value="1500" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label">Категорија</label>
+            <select class="form-select" id="category" required>
+              <option value="">Избери категорија</option>
+              <option value="женска" selected>Женска</option>
+              <option value="машка">Машка</option>
+              <option value="унисекс">Унисекс</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">URL на слика</label>
+            <input type="url" class="form-control" id="image" value="https://images.unsplash.com/photo-1512436991641-6745cdb1723f" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Опис</label>
+            <textarea class="form-control" id="description" rows="4" required>Многу удобен фустан за топли денови. Достапен во повеќе бои и големини.</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-warning w-100">Зачувај измени</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
