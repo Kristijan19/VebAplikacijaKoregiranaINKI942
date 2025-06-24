@@ -1,0 +1,25 @@
+version: '3'
+services:
+  backend:
+    build: .
+    container_name: boutique-backend
+    ports:
+      - '5000:5000'
+    volumes:
+      - .:/app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/boutique-db
+    depends_on:
+      - mongo
+    command: npm run dev
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
